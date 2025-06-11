@@ -6,12 +6,14 @@ namespace Proyecto_1_PAvanzada
     {
         private readonly categoriasFrmViewModel viewModel = new categoriasFrmViewModel();
         private readonly CategoriasRepo categoriasRepo;
+        categoriasFormValidation validation;
         private ImagenRepo ImagenRepo;
-        public frmCategorias(CategoriasRepo categoriasRepo, ImagenRepo imagenRepo)
+        public frmCategorias(CategoriasRepo categoriasRepo, ImagenRepo imagenRepo,categoriasFormValidation validations)
         {
             InitializeComponent();
             this.categoriasRepo = categoriasRepo;
             this.ImagenRepo = imagenRepo;
+            this.validation = validations;
 
             Load += FrmCategorias_Load;
 
@@ -36,6 +38,13 @@ namespace Proyecto_1_PAvanzada
         }
         private void btnGuardar_Click(object sender, EventArgs e)
         {
+           if (!Validar())
+            {
+                return;
+            }
+             {
+
+            }
             if (viewModel.id_Categorias == 0)
             {
                 DialogResult dialogResult = MessageBox.Show("Esta seguro de querer agregar este nuevo suplidor?", "Seguro?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
@@ -105,7 +114,17 @@ namespace Proyecto_1_PAvanzada
                 pictureBox1.Image = null; 
             }
         }
-
+        private bool Validar()
+        {
+            var validationResult = validation.Validate(viewModel);
+            if (!validationResult.IsValid)
+            {
+                var mensaje = string.Join('\n', validationResult.Errors.Select(a => a.ErrorMessage));
+                MessageBox.Show(mensaje, "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
+        }
         private void LimpiarFormulario()
         {
             txtDescripcion.Text = "";
