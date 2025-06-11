@@ -45,6 +45,7 @@ namespace Proyecto_1_PAvanzada
             dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvProductos.AutoResizeColumns();
             dgvProductos.AutoResizeColumnHeadersHeight();
+            dgvProductos.ReadOnly = true;
         }
         private bool Validar()
         {

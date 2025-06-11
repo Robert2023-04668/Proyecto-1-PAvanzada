@@ -36,14 +36,14 @@
             btnEliminar = new Button();
             btnAgregar = new Button();
             btnGuardar = new Button();
-            txtId = new TextBox();
-            bindingSource1 = new BindingSource(components);
             label3 = new Label();
             label2 = new Label();
             txtEstado = new TextBox();
+            bindingSource1 = new BindingSource(components);
             txtDescripcion = new TextBox();
             txtNombreCategoria = new TextBox();
             label1 = new Label();
+            txtId = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dgvCategorias).BeginInit();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -93,6 +93,7 @@
             // 
             // btnGuardarImagen
             // 
+            btnGuardarImagen.Cursor = Cursors.Hand;
             btnGuardarImagen.Font = new Font("Times New Roman", 12F);
             btnGuardarImagen.Location = new Point(3, 473);
             btnGuardarImagen.Name = "btnGuardarImagen";
@@ -104,6 +105,7 @@
             // 
             // btnEliminar
             // 
+            btnEliminar.Cursor = Cursors.Hand;
             btnEliminar.Font = new Font("Times New Roman", 12F);
             btnEliminar.Location = new Point(3, 581);
             btnEliminar.Name = "btnEliminar";
@@ -115,6 +117,7 @@
             // 
             // btnAgregar
             // 
+            btnAgregar.Cursor = Cursors.Hand;
             btnAgregar.Font = new Font("Times New Roman", 12F);
             btnAgregar.Location = new Point(3, 511);
             btnAgregar.Name = "btnAgregar";
@@ -126,6 +129,7 @@
             // 
             // btnGuardar
             // 
+            btnGuardar.Cursor = Cursors.Hand;
             btnGuardar.Font = new Font("Times New Roman", 12F);
             btnGuardar.Location = new Point(3, 546);
             btnGuardar.Name = "btnGuardar";
@@ -134,19 +138,6 @@
             btnGuardar.Text = "Guardar";
             btnGuardar.UseVisualStyleBackColor = true;
             btnGuardar.Click += btnGuardar_Click;
-            // 
-            // txtId
-            // 
-            txtId.DataBindings.Add(new Binding("Text", bindingSource1, "id_Categorias", true));
-            txtId.Location = new Point(71, 174);
-            txtId.Name = "txtId";
-            txtId.Size = new Size(18, 27);
-            txtId.TabIndex = 8;
-            txtId.TextChanged += txtId_TextChanged;
-            // 
-            // bindingSource1
-            // 
-            bindingSource1.DataSource = typeof(categoriasFrmViewModel);
             // 
             // label3
             // 
@@ -177,6 +168,10 @@
             txtEstado.Size = new Size(125, 30);
             txtEstado.TabIndex = 3;
             // 
+            // bindingSource1
+            // 
+            bindingSource1.DataSource = typeof(categoriasFrmViewModel);
+            // 
             // txtDescripcion
             // 
             txtDescripcion.DataBindings.Add(new Binding("Text", bindingSource1, "Descripcion", true));
@@ -205,6 +200,15 @@
             label1.TabIndex = 0;
             label1.Text = "Nombre";
             // 
+            // txtId
+            // 
+            txtId.DataBindings.Add(new Binding("Text", bindingSource1, "id_Categorias", true));
+            txtId.Location = new Point(71, 174);
+            txtId.Name = "txtId";
+            txtId.Size = new Size(18, 27);
+            txtId.TabIndex = 8;
+            txtId.TextChanged += txtId_TextChanged;
+            // 
             // frmCategorias
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -212,7 +216,10 @@
             ClientSize = new Size(1251, 615);
             Controls.Add(dgvCategorias);
             Controls.Add(panel1);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frmCategorias";
+            ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "frmCategorias";
             ((System.ComponentModel.ISupportInitialize)dgvCategorias).EndInit();

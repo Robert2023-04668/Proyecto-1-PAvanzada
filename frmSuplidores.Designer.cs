@@ -117,6 +117,7 @@
             // btnLimpiar
             // 
             btnLimpiar.BackColor = Color.LightSeaGreen;
+            btnLimpiar.Cursor = Cursors.Hand;
             btnLimpiar.FlatStyle = FlatStyle.Flat;
             btnLimpiar.Font = new Font("Times New Roman", 16.2F);
             btnLimpiar.Location = new Point(8, 565);
@@ -130,6 +131,7 @@
             // btnElimiar
             // 
             btnElimiar.BackColor = Color.DarkRed;
+            btnElimiar.Cursor = Cursors.Hand;
             btnElimiar.FlatStyle = FlatStyle.Flat;
             btnElimiar.Font = new Font("Times New Roman", 16.2F);
             btnElimiar.Location = new Point(8, 514);
@@ -143,6 +145,7 @@
             // btnGuardar
             // 
             btnGuardar.BackColor = Color.MediumSeaGreen;
+            btnGuardar.Cursor = Cursors.Hand;
             btnGuardar.FlatStyle = FlatStyle.Flat;
             btnGuardar.Font = new Font("Times New Roman", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnGuardar.Location = new Point(8, 462);
@@ -276,6 +279,7 @@
             Controls.Add(dgvSuplidores);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmSuplidores";
             ShowInTaskbar = false;

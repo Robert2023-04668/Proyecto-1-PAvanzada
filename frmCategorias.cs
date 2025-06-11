@@ -87,6 +87,7 @@ namespace Proyecto_1_PAvanzada
             dgvCategorias.Refresh();
             dgvCategorias.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvCategorias.AutoResizeColumnHeadersHeight();
+            dgvCategorias.ReadOnly = true;
         }
 
         private void MostrarImagenPorCategoria(int idCategoria)

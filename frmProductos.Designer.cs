@@ -38,8 +38,6 @@
             cmbCategoria = new ComboBox();
             btnEliminar = new Button();
             btnGuardar = new Button();
-            textBox7 = new TextBox();
-            bindingSource1 = new BindingSource(components);
             label9 = new Label();
             label8 = new Label();
             label7 = new Label();
@@ -47,8 +45,10 @@
             label2 = new Label();
             label1 = new Label();
             txtPrecioUnitario = new TextBox();
+            bindingSource1 = new BindingSource(components);
             txtDescripcion = new TextBox();
             txtNombre = new TextBox();
+            textBox7 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dgvProductos).BeginInit();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
@@ -96,6 +96,7 @@
             // 
             btnLimpiar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnLimpiar.BackColor = Color.LightSeaGreen;
+            btnLimpiar.Cursor = Cursors.Hand;
             btnLimpiar.FlatStyle = FlatStyle.Flat;
             btnLimpiar.Font = new Font("Times New Roman", 16.2F);
             btnLimpiar.Location = new Point(12, 559);
@@ -156,6 +157,7 @@
             // 
             btnEliminar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnEliminar.BackColor = Color.DarkRed;
+            btnEliminar.Cursor = Cursors.Hand;
             btnEliminar.FlatStyle = FlatStyle.Flat;
             btnEliminar.Font = new Font("Times New Roman", 16.2F);
             btnEliminar.Location = new Point(12, 511);
@@ -170,6 +172,7 @@
             // 
             btnGuardar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnGuardar.BackColor = Color.MediumSeaGreen;
+            btnGuardar.Cursor = Cursors.Hand;
             btnGuardar.FlatStyle = FlatStyle.Flat;
             btnGuardar.Font = new Font("Times New Roman", 16.2F);
             btnGuardar.Location = new Point(12, 463);
@@ -179,20 +182,6 @@
             btnGuardar.Text = "Guardar";
             btnGuardar.UseVisualStyleBackColor = false;
             btnGuardar.Click += btnGuardar_Click;
-            // 
-            // textBox7
-            // 
-            textBox7.DataBindings.Add(new Binding("Text", bindingSource1, "Id", true));
-            textBox7.Font = new Font("Times New Roman", 10.2F);
-            textBox7.Location = new Point(125, 463);
-            textBox7.Name = "textBox7";
-            textBox7.Size = new Size(20, 27);
-            textBox7.TabIndex = 12;
-            textBox7.Visible = false;
-            // 
-            // bindingSource1
-            // 
-            bindingSource1.DataSource = typeof(ProductosFormViewModel);
             // 
             // label9
             // 
@@ -270,6 +259,10 @@
             txtPrecioUnitario.Size = new Size(151, 28);
             txtPrecioUnitario.TabIndex = 2;
             // 
+            // bindingSource1
+            // 
+            bindingSource1.DataSource = typeof(ProductosFormViewModel);
+            // 
             // txtDescripcion
             // 
             txtDescripcion.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
@@ -290,6 +283,16 @@
             txtNombre.Size = new Size(151, 28);
             txtNombre.TabIndex = 0;
             // 
+            // textBox7
+            // 
+            textBox7.DataBindings.Add(new Binding("Text", bindingSource1, "Id", true));
+            textBox7.Font = new Font("Times New Roman", 10.2F);
+            textBox7.Location = new Point(125, 463);
+            textBox7.Name = "textBox7";
+            textBox7.Size = new Size(20, 27);
+            textBox7.TabIndex = 12;
+            textBox7.Visible = false;
+            // 
             // frmProductos
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -297,7 +300,10 @@
             ClientSize = new Size(1515, 619);
             Controls.Add(dgvProductos);
             Controls.Add(panel1);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frmProductos";
+            ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Productos";
             ((System.ComponentModel.ISupportInitialize)dgvProductos).EndInit();

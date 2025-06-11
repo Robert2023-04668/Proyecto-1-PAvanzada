@@ -157,6 +157,7 @@ namespace Proyecto_1_PAvanzada
             dgvSuplidores.CellClick += dgvSuplidores_CellCtClick;
             dgvSuplidores.AutoResizeColumnHeadersHeight();
             dgvSuplidores.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvSuplidores.ReadOnly = true;
         }
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
