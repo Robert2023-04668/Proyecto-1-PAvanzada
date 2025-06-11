@@ -4,6 +4,9 @@ namespace Proyecto_1_PAvanzada
 {
     public partial class frmSuplidores : Form
     {
+
+        // instacias, load
+        #region
         private readonly SuplidorFormViewModel ViewModel = new SuplidorFormViewModel();
         private readonly SuplidoresRepo suplidoresRepo;
         private readonly SuplidoresFormValidator _Validator;
@@ -21,6 +24,10 @@ namespace Proyecto_1_PAvanzada
             bindingSource1.Add(ViewModel);
             cargarcmb();
         }
+
+        #endregion
+        //Extraccion de informacion del dgv
+        #region
         private void dgvSuplidores_CellCtClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -35,14 +42,81 @@ namespace Proyecto_1_PAvanzada
                 cmbEstado.SelectedValue = ViewModel.S_EstadoId = int.Parse(row.Cells[8].Value.ToString());
             }
         }
+        #endregion
+        //botones
+        #region
         private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            bool flowControl = GuardarSuplidor();
+            if (!flowControl)
+            {
+                return;
+            }
+        }
+        private void btnElimiar_Click(object sender, EventArgs e)
+        {
+            bool flowControl = EliminarSuplidor();
+            if (!flowControl)
+            {
+                return;
+            }
+        }
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            Limpiar();
+        }
+        #endregion
+        //metodos
+        #region
+        private bool EliminarSuplidor()
+        {
+            bool Validation = Validar();
+            if (!Validation)
+            {
+                return false;
+            }
+            DialogResult dialogResult = MessageBox.Show("Esta seguro de querer Eliminar este  suplidor?", "Seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (dialogResult == DialogResult.Yes)
+            {
+                if (dgvSuplidores.SelectedRows.Count <= 0)
+                {
+                    MessageBox.Show("Debe serelccionar un Suplidor, el cual eliminar", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+                else
+                {
+
+                    var suplidoress = (C_Suplidoress)dgvSuplidores.SelectedRows[0].DataBoundItem;
+                    suplidoresRepo.Delete(suplidoress.id_Suplidores);
+                    CargarDatos();
+                }
+            }
+            else
+            {
+                MessageBox.Show("La operacion ha sido cancelada", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            return true;
+        }
+        private void CargarDatos()
+        {
+            var Suplidoress = suplidoresRepo.GetSuplidores();
+            dgvSuplidores.DataSource = Suplidoress;
+            dgvSuplidores.AutoResizeColumns();
+            dgvSuplidores.CellClick += dgvSuplidores_CellCtClick;
+            dgvSuplidores.AutoResizeColumnHeadersHeight();
+            dgvSuplidores.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvSuplidores.ReadOnly = true;
+        }
+        private bool GuardarSuplidor()
         {
             if (txtid.Text == "0")
             {
                 bool validation = Validar();
                 if (!validation)
                 {
-                    return;
+                    return false;
                 }
                 DialogResult dialogResult = MessageBox.Show("Esta seguro de querer agregar este nuevo suplidor?", "Seguro?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
@@ -69,7 +143,7 @@ namespace Proyecto_1_PAvanzada
 
                 if (!validation)
                 {
-                    return;
+                    return false;
                 }
                 DialogResult dialogResult = MessageBox.Show("Esta seguro de querer Modificar este nuevo suplidor?", "Seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
@@ -77,7 +151,7 @@ namespace Proyecto_1_PAvanzada
                     if (dgvSuplidores.SelectedRows.Count <= 0)
                     {
                         MessageBox.Show("Debe serelccionar un Suplidor, el cual eliminar", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                        return false;
                     }
                     else
                     {
@@ -98,6 +172,8 @@ namespace Proyecto_1_PAvanzada
                     }
                 }
             }
+
+            return true;
         }
         public void cargarcmb()
         {
@@ -120,49 +196,6 @@ namespace Proyecto_1_PAvanzada
 
             return true;
         }
-        private void btnElimiar_Click(object sender, EventArgs e)
-        {
-            bool Validation = Validar();
-            if (!Validation)
-            {
-                return;
-            }
-            DialogResult dialogResult = MessageBox.Show("Esta seguro de querer Eliminar este  suplidor?", "Seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (dialogResult == DialogResult.Yes)
-            {
-                if (dgvSuplidores.SelectedRows.Count <= 0)
-                {
-                    MessageBox.Show("Debe serelccionar un Suplidor, el cual eliminar", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-                else
-                {
-
-                    var suplidoress = (C_Suplidoress)dgvSuplidores.SelectedRows[0].DataBoundItem;
-                    suplidoresRepo.Delete(suplidoress.id_Suplidores);
-                    CargarDatos();
-                }
-            }
-            else
-            {
-                MessageBox.Show("La operacion ha sido cancelada", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-        private void CargarDatos()
-        {
-            var Suplidoress = suplidoresRepo.GetSuplidores();
-            dgvSuplidores.DataSource = Suplidoress;
-            dgvSuplidores.AutoResizeColumns();
-            dgvSuplidores.CellClick += dgvSuplidores_CellCtClick;
-            dgvSuplidores.AutoResizeColumnHeadersHeight();
-            dgvSuplidores.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvSuplidores.ReadOnly = true;
-        }
-        private void btnLimpiar_Click(object sender, EventArgs e)
-        {
-            Limpiar();
-        }
         private void Limpiar()
         {
             txtContacto.Text = "";
@@ -179,6 +212,7 @@ namespace Proyecto_1_PAvanzada
             ViewModel.Sitio_Web = "";
             cmbEstado.SelectedIndex = 0;
         }
+        #endregion
 
     }
     public class SuplidorFormViewModel

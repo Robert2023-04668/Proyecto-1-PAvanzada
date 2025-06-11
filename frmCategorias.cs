@@ -4,6 +4,9 @@ namespace Proyecto_1_PAvanzada
 {
     public partial class frmCategorias : Form
     {
+
+        //Instancias, load 
+        #region
         private readonly categoriasFrmViewModel viewModel = new categoriasFrmViewModel();
         private readonly CategoriasRepo categoriasRepo;
         categoriasFormValidation validation;
@@ -25,6 +28,10 @@ namespace Proyecto_1_PAvanzada
             bindingSource1.Add(viewModel);
             CargarDatos();
         }
+        #endregion
+
+        //Extraccion de datos atraves del dgv
+        #region
         private void dgvCategorias_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -36,104 +43,19 @@ namespace Proyecto_1_PAvanzada
                 viewModel.id_Categorias = int.Parse(txtId.Text = row.Cells[0].Value.ToString());
             }
         }
+        #endregion
+
+        //Botones
+        #region
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-           if (!Validar())
+            bool flowControl = GuardarCategoria();
+            if (!flowControl)
             {
                 return;
             }
-             {
-
-            }
-            if (viewModel.id_Categorias == 0)
-            {
-                DialogResult dialogResult = MessageBox.Show("Esta seguro de querer agregar este nuevo suplidor?", "Seguro?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-
-                if (dialogResult == DialogResult.OK)
-                {
-
-
-                    categoriasRepo.Create(new C_Categorias
-                    {
-                        Nombre_Categoria = viewModel.Nombre_Categoria,
-                        Descripcion = viewModel.Descripcion,
-                        C_EstadoId = viewModel.C_EstadoId,
-                    });
-                    CargarDatos();
-                }
-            }
-            else
-            {
-
-                DialogResult dialogResult = MessageBox.Show("Esta seguro de querer Modificar este nuevo suplidor?", "Seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    if (dgvCategorias.SelectedRows.Count <= 0)
-                    {
-                        MessageBox.Show("Debe seleccionar un Suplidor, el cual eliminar", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                    else
-                    {
-                        categoriasRepo.Update(new C_Categorias
-                        {
-                            id_Categorias = viewModel.id_Categorias,
-                            Nombre_Categoria = viewModel.Nombre_Categoria,
-                            Descripcion = viewModel.Descripcion,
-                            C_EstadoId = viewModel.C_EstadoId
-                        });
-                       CargarDatos();          
-                    }
-
-                }
-            }
-        }
-        private void CargarDatos()
-        {
-            var categorias = categoriasRepo.GetCategorias();
-            dgvCategorias.DataSource = categorias;
-            dgvCategorias.AutoResizeColumns();
-            dgvCategorias.Refresh();
-            dgvCategorias.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvCategorias.AutoResizeColumnHeadersHeight();
-            dgvCategorias.ReadOnly = true;
         }
 
-        private void MostrarImagenPorCategoria(int idCategoria)
-        {
-            byte[] imagen = ImagenRepo.GetImagenPorCategoria(idCategoria);
-            if (imagen != null)
-            {
-                using (var ms = new MemoryStream(imagen))
-                {
-                    pictureBox1.Image = Image.FromStream(ms);
-                }
-            }
-            else
-            {
-                pictureBox1.Image = null; 
-            }
-        }
-        private bool Validar()
-        {
-            var validationResult = validation.Validate(viewModel);
-            if (!validationResult.IsValid)
-            {
-                var mensaje = string.Join('\n', validationResult.Errors.Select(a => a.ErrorMessage));
-                MessageBox.Show(mensaje, "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-            return true;
-        }
-        private void LimpiarFormulario()
-        {
-            txtDescripcion.Text = "";
-            txtEstado.Text = "";
-            txtNombreCategoria.Text = "";
-            viewModel.id_Categorias = 0;
-            viewModel.Descripcion = "";
-            viewModel.C_EstadoId = 1;
-        }
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             LimpiarFormulario();
@@ -141,32 +63,11 @@ namespace Proyecto_1_PAvanzada
 
         private void btnEliminar_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Esta seguro de querer Eliminar esta  categoria?", "Seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (dialogResult == DialogResult.Yes)
+            bool flowControl = EliminarCategoria();
+            if (!flowControl)
             {
-                if (dgvCategorias.SelectedRows.Count <= 0)
-                {
-                    MessageBox.Show("Debe serelccionar una categoria la cual eliminar", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-                else
-                {
-
-                    var categorias = (C_Categorias)dgvCategorias.SelectedRows[0].DataBoundItem;
-                    categoriasRepo.Delete(categorias.id_Categorias);
-                    CargarDatos();
-                }
+                return;
             }
-            else
-            {
-                MessageBox.Show("La operacion ha sido cancelada", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void txtId_TextChanged(object sender, EventArgs e)
-        {
-            MostrarImagenPorCategoria(int.Parse(txtId.Text));
         }
         private void btnGuardarImagen_Click(object sender, EventArgs e)
         {
@@ -198,6 +99,139 @@ namespace Proyecto_1_PAvanzada
 
 
         }
+
+        #endregion
+
+        //Metodos
+        #region
+        private bool GuardarCategoria()
+        {
+            if (!Validar())
+            {
+                return false;
+            }
+            if (viewModel.id_Categorias == 0)
+            {
+                DialogResult dialogResult = MessageBox.Show("Esta seguro de querer agregar esta nueva categoria?", "Seguro?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+                if (dialogResult == DialogResult.OK)
+                {
+
+
+                    categoriasRepo.Create(new C_Categorias
+                    {
+                        Nombre_Categoria = viewModel.Nombre_Categoria,
+                        Descripcion = viewModel.Descripcion,
+                        C_EstadoId = viewModel.C_EstadoId,
+                    });
+                    CargarDatos();
+                }
+            }
+            else
+            {
+
+                DialogResult dialogResult = MessageBox.Show("Esta seguro de querer Modificar esta  Categoria?", "Seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    if (dgvCategorias.SelectedRows.Count <= 0)
+                    {
+                        MessageBox.Show("Debe seleccionar una categoria, la cual eliminar", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+                    else
+                    {
+                        categoriasRepo.Update(new C_Categorias
+                        {
+                            id_Categorias = viewModel.id_Categorias,
+                            Nombre_Categoria = viewModel.Nombre_Categoria,
+                            Descripcion = viewModel.Descripcion,
+                            C_EstadoId = viewModel.C_EstadoId
+                        });
+                        CargarDatos();
+                    }
+
+                }
+            }
+
+            return true;
+        }
+        private void CargarDatos()
+        {
+            var categorias = categoriasRepo.GetCategorias();
+            dgvCategorias.DataSource = categorias;
+            dgvCategorias.AutoResizeColumns();
+            dgvCategorias.Refresh();
+            dgvCategorias.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvCategorias.AutoResizeColumnHeadersHeight();
+            dgvCategorias.ReadOnly = true;
+        }
+        private void MostrarImagenPorCategoria(int idCategoria)
+        {
+            byte[] imagen = ImagenRepo.GetImagenPorCategoria(idCategoria);
+            if (imagen != null)
+            {
+                using (var ms = new MemoryStream(imagen))
+                {
+                    pictureBox1.Image = Image.FromStream(ms);
+                }
+            }
+            else
+            {
+                pictureBox1.Image = null;
+            }
+        }
+        private bool Validar()
+        {
+            var validationResult = validation.Validate(viewModel);
+            if (!validationResult.IsValid)
+            {
+                var mensaje = string.Join('\n', validationResult.Errors.Select(a => a.ErrorMessage));
+                MessageBox.Show(mensaje, "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
+        }
+        private void LimpiarFormulario()
+        {
+            txtDescripcion.Text = "";
+            txtEstado.Text = "";
+            txtNombreCategoria.Text = "";
+            viewModel.id_Categorias = 0;
+            viewModel.Descripcion = "";
+            viewModel.C_EstadoId = 1;
+        }
+        private bool EliminarCategoria()
+        {
+            DialogResult dialogResult = MessageBox.Show("Esta seguro de querer Eliminar esta  categoria?", "Seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (dialogResult == DialogResult.Yes)
+            {
+                if (dgvCategorias.SelectedRows.Count <= 0)
+                {
+                    MessageBox.Show("Debe serelccionar una categoria la cual eliminar", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+                else
+                {
+
+                    var categorias = (C_Categorias)dgvCategorias.SelectedRows[0].DataBoundItem;
+                    categoriasRepo.Delete(categorias.id_Categorias);
+                    CargarDatos();
+                }
+            }
+            else
+            {
+                MessageBox.Show("La operacion ha sido cancelada", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            return true;
+        }
+        private void txtId_TextChanged(object sender, EventArgs e)
+        {
+            MostrarImagenPorCategoria(int.Parse(txtId.Text));
+        }
+        #endregion
+
         public class categoriasFrmViewModel
         {
             public int id_Categorias { get; set; }
@@ -218,7 +252,6 @@ namespace Proyecto_1_PAvanzada
             }
         }
 
-       
     }
 }
 

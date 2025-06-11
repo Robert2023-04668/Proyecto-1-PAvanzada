@@ -5,10 +5,12 @@ namespace Proyecto_1_PAvanzada
 {
     public partial class frmProductos : Form
     {
+        //Instancias, load 
+        #region
         private readonly ProductoRepo productoRepo;
         private readonly ProductosFormViewModel viewModel = new ProductosFormViewModel();
         private readonly ProdutosformValidation _validator;
-
+    
         public frmProductos(ProductoRepo productoRepo, ProdutosformValidation validation)
         {
             InitializeComponent();
@@ -16,6 +18,8 @@ namespace Proyecto_1_PAvanzada
             this._validator = validation;
             Load += FrmProductos_Load;
         }
+      
+
         private void FrmProductos_Load(object? sender, EventArgs e)
         {
             CargarDatos();
@@ -23,6 +27,11 @@ namespace Proyecto_1_PAvanzada
             bindingSource1.Add(viewModel);
            
         }
+
+        #endregion
+
+        //Extraccion de datos atraves del dgv
+        #region
         private void dgvProductos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -39,6 +48,38 @@ namespace Proyecto_1_PAvanzada
                 cmbSuplidores.SelectedValue = viewModel.id_Suplidor = Convert.ToInt32(row.Cells[8].Value);
             }
         }
+        #endregion
+
+        // Botones
+        #region
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            viewModel.P_EstadoId = (int)cmbEstados.SelectedValue;
+            viewModel.id_Categoria = (int)cmbCategoria.SelectedValue;
+            viewModel.id_Suplidor = (int)cmbSuplidores.SelectedValue;
+            bool flowControl = GuardarProducto();
+            if (!flowControl)
+            {
+                return;
+            }
+
+        }
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            bool flowControl = EliminarProducto();
+            if (!flowControl)
+            {
+                return;
+            }
+        }
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            LimpiarFormulario();
+        }
+        #endregion
+
+        //Metodos
+        #region 
         private void CargarDatos()
         {
             dgvProductos.DataSource = productoRepo.GetProductos();
@@ -47,23 +88,9 @@ namespace Proyecto_1_PAvanzada
             dgvProductos.AutoResizeColumnHeadersHeight();
             dgvProductos.ReadOnly = true;
         }
-        private bool Validar()
+        private bool GuardarProducto()
         {
-            var validationResult = _validator.Validate(viewModel);
-            if (!validationResult.IsValid)
-            {
-                var mensaje = string.Join('\n', validationResult.Errors.Select(a => a.ErrorMessage));
-                MessageBox.Show(mensaje, "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-            return true;
-        }
-        private void btnGuardar_Click(object sender, EventArgs e)
-        {
-            viewModel.P_EstadoId = (int)cmbEstados.SelectedValue;
-            viewModel.id_Categoria = (int)cmbCategoria.SelectedValue;
-            viewModel.id_Suplidor = (int)cmbSuplidores.SelectedValue;
-            if (!Validar()) return;
+            if (!Validar()) return false;
 
 
 
@@ -95,7 +122,7 @@ namespace Proyecto_1_PAvanzada
                     if (dgvProductos.SelectedRows.Count == 0)
                     {
                         MessageBox.Show("Debe seleccionar un producto para modificar", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                        return false;
                     }
 
                     productoRepo.Update(new C_Productos
@@ -112,8 +139,21 @@ namespace Proyecto_1_PAvanzada
                     CargarDatos();
                 }
             }
+
+            return true;
         }
-        private void btnEliminar_Click(object sender, EventArgs e)
+        private bool Validar()
+        {
+            var validationResult = _validator.Validate(viewModel);
+            if (!validationResult.IsValid)
+            {
+                var mensaje = string.Join('\n', validationResult.Errors.Select(a => a.ErrorMessage));
+                MessageBox.Show(mensaje, "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
+        }
+        private bool EliminarProducto()
         {
             DialogResult dialogResult = MessageBox.Show("¿Está seguro de que desea eliminar este producto?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -122,7 +162,7 @@ namespace Proyecto_1_PAvanzada
                 if (dgvProductos.SelectedRows.Count == 0)
                 {
                     MessageBox.Show("Debe seleccionar un producto para eliminar", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    return false;
                 }
 
                 var producto = (C_Productos)dgvProductos.SelectedRows[0].DataBoundItem;
@@ -133,6 +173,8 @@ namespace Proyecto_1_PAvanzada
             {
                 MessageBox.Show("La operación ha sido cancelada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+
+            return true;
         }
         public void cargarcmb()
         {
@@ -166,10 +208,7 @@ namespace Proyecto_1_PAvanzada
             cmbEstados.SelectedIndex = 0;
             cmbSuplidores.SelectedIndex = 0;
         }
-        private void btnLimpiar_Click(object sender, EventArgs e)
-        {
-           LimpiarFormulario();
-        }
+        #endregion
     }
     public class ProductosFormViewModel
     {
