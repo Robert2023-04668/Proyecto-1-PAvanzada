@@ -16,36 +16,34 @@ namespace Proyecto_1_PAvanzada
             this.configuration = configuration;
         }
 
-        public byte[] GetImagenPorCategoria(int idCategoria)
+        public IEnumerable<byte[]> GetImagenPorCategoria(int idCategoria)
         {
-            byte[] imagenData = null;
+            var imagenes = new List<byte[]>();
+            SqlConnection sqlConnection = CreateConnection();
 
-
-            SqlConnection connection = CreateConnection();
-            connection.Open();
-            var command = connection.CreateCommand();
-
+            sqlConnection.Open();
+            var command = sqlConnection.CreateCommand();
             command.CommandText = @"
             SELECT i.Imagen 
             FROM Imagenes i
             INNER JOIN CategoriaImagen ci ON ci.id_Imagen = i.id_Imagen
-            WHERE ci.id_Categorias = @id";
+            WHERE ci.id_Categorias = @idCategoria";
+            command.Parameters.AddWithValue("@idCategoria", idCategoria);
 
-            command.Parameters.AddWithValue("@id", idCategoria);
-
-            object result = command.ExecuteScalar();
-            if (result != null && result != DBNull.Value)
+            var datareader = command.ExecuteReader();
+            while (datareader.Read())
             {
-                imagenData = (byte[])result;
+                var imagen = (byte[])datareader["Imagen"];
+                imagenes.Add(imagen);
             }
-            connection.Close();
-            return imagenData;
-        }
 
+            sqlConnection.Close();
+            return imagenes;
+        }
         public void InsertarImagenYCategoria(byte[] imagen, int idCategoria)
         {
             SqlConnection connection = CreateConnection();
-            
+
             var command = connection.CreateCommand();
             command.CommandText = @"INSERT INTO Imagenes (Imagen) OUTPUT INSERTED.id_Imagen VALUES (@Imagen)";
 
@@ -65,14 +63,12 @@ namespace Proyecto_1_PAvanzada
 
         }
 
-
         private SqlConnection CreateConnection()
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             var connection = new SqlConnection(connectionString);
             return connection;
         }
-
 
     }
 

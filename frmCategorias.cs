@@ -11,7 +11,10 @@ namespace Proyecto_1_PAvanzada
         private readonly CategoriasRepo categoriasRepo;
         categoriasFormValidation validation;
         private ImagenRepo ImagenRepo;
-        public frmCategorias(CategoriasRepo categoriasRepo, ImagenRepo imagenRepo,categoriasFormValidation validations)
+        private List<byte[]> imagenesCategoria = new List<byte[]>();
+        private int indiceActual = 0;
+
+        public frmCategorias(CategoriasRepo categoriasRepo, ImagenRepo imagenRepo, categoriasFormValidation validations)
         {
             InitializeComponent();
             this.categoriasRepo = categoriasRepo;
@@ -24,9 +27,10 @@ namespace Proyecto_1_PAvanzada
 
         private void FrmCategorias_Load(object? sender, EventArgs e)
         {
-        
+
             bindingSource1.Add(viewModel);
             CargarDatos();
+
         }
         #endregion
 
@@ -85,7 +89,7 @@ namespace Proyecto_1_PAvanzada
 
                 ImagenRepo.InsertarImagenYCategoria(imagenBytes, idCategoria);
                 MessageBox.Show("Imagen guardada correctamente.");
-                byte[] imagen = ImagenRepo.GetImagenPorCategoria(idCategoria);
+                byte[] imagen = ImagenRepo.GetImagenPorCategoria(idCategoria).FirstOrDefault();
 
                 if (imagen != null)
                 {
@@ -104,6 +108,25 @@ namespace Proyecto_1_PAvanzada
 
         //Metodos
         #region
+        private void MostrarImagen(int indice)
+        {
+            if (imagenesCategoria == null || imagenesCategoria.Count == 0)
+            {
+                pictureBox1.Image = null;
+                return;
+            }
+
+            if (indice < 0 || indice >= imagenesCategoria.Count)
+            {
+                MessageBox.Show("Índice de imagen fuera de rango.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (var ms = new MemoryStream(imagenesCategoria[indice]))
+            {
+                pictureBox1.Image = Image.FromStream(ms);
+            }
+        }
         private bool GuardarCategoria()
         {
             if (!Validar())
@@ -167,17 +190,24 @@ namespace Proyecto_1_PAvanzada
         }
         private void MostrarImagenPorCategoria(int idCategoria)
         {
-            byte[] imagen = ImagenRepo.GetImagenPorCategoria(idCategoria);
-            if (imagen != null)
+            imagenesCategoria = ImagenRepo.GetImagenPorCategoria(idCategoria).ToList();
+
+            if (imagenesCategoria.Count > 0)
             {
-                using (var ms = new MemoryStream(imagen))
-                {
-                    pictureBox1.Image = Image.FromStream(ms);
-                }
+                indiceActual = 0;
+                MostrarImagen(indiceActual);
             }
             else
             {
                 pictureBox1.Image = null;
+            }
+        }
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            if (imagenesCategoria.Count >= 1)
+            {
+                indiceActual = (indiceActual + 1) % imagenesCategoria.Count; // Círculo infinito
+                MostrarImagen(indiceActual);
             }
         }
         private bool Validar()
@@ -251,7 +281,6 @@ namespace Proyecto_1_PAvanzada
 
             }
         }
-
     }
 }
 
