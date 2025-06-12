@@ -235,14 +235,19 @@ namespace Proyecto_1_PAvanzada
             RuleFor(a => a.Nombre_Empresa).NotEmpty().Length(1, 49).WithMessage("El nombre de la empresa es requerido");
             RuleFor(a => a.Nombre_Contacto).NotEmpty().Length(1, 49).WithMessage("El nombre del contacto es requerido");
             RuleFor(a => a.Nombre_Contacto).MaximumLength(50).WithMessage("El nombre del contacto no puede superar los 50 caracteres (espacion cuentan)");
-            RuleFor(a => a.Nombre_Empresa).MaximumLength(50).WithMessage("El nombre de la empresa no puede superar los 50 caracteres (espacion cuentan)");
+            RuleFor(a => a.Nombre_Empresa).MaximumLength(75).WithMessage("El nombre de la empresa no puede superar los 75 caracteres (espacion cuentan)");
+            RuleFor(a => a.Sitio_Web).MaximumLength(300).WithMessage("El nombre de la empresa no puede superar los 300 caracteres (espacion cuentan)");
+            RuleFor(a => a.Telefono).MaximumLength(12).WithMessage("El tele de la empresa no puede superar los 12 caracteres (espacion cuentan)");
+            RuleFor(a => a.Correo).MaximumLength(150).WithMessage("El correo de la empresa no puede superar los 150 caracteres (espacion cuentan)");
             RuleFor(a => a.S_EstadoId).NotEmpty().WithMessage("El estado es requerido");
             RuleFor(a => a.Correo).NotEmpty().WithMessage("El correo es requerido");
             RuleFor(a => a.Telefono).NotEmpty().WithMessage("El telefono es requerido");
             RuleFor(a => a.Sitio_Web).NotEmpty().WithMessage("El sitio web es requerido");
             RuleFor(a => a.Telefono).Matches(@"^8[024]9-[0-9]{3}-[0-9]{4}$").WithMessage("Formato Telefonico invalido");
+            RuleFor(a => a.Telefono).Matches((@"^www\.[a-zA-Z0-9\-]+\.[a-zA-Z]{2,4}$")).WithMessage("Formato del sitio web es invalido");
             RuleFor(a => a.Correo).NotEmpty().EmailAddress().WithMessage("Formato de  correo Invalido");
 
         }
+       
     }
 }
