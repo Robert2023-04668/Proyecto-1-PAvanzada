@@ -21,8 +21,9 @@ namespace Proyecto_1_PAvanzada
         private void FrmSuplidores(object? sender, EventArgs e)
         {
             CargarDatos();
-            bindingSource1.Add(ViewModel);
             cargarcmb();
+            bindingSource1.Add(ViewModel);
+            
         }
 
         #endregion
@@ -47,6 +48,7 @@ namespace Proyecto_1_PAvanzada
         #region
         private void btnGuardar_Click(object sender, EventArgs e)
         {
+            ViewModel.S_EstadoId = (int)cmbEstado.SelectedValue;
             bool flowControl = GuardarSuplidor();
             if (!flowControl)
             {
@@ -111,7 +113,7 @@ namespace Proyecto_1_PAvanzada
         }
         private bool GuardarSuplidor()
         {
-            if (txtid.Text == "0")
+            if (ViewModel.id_Suplidores == 0)
             {
                 bool validation = Validar();
                 if (!validation)
@@ -198,13 +200,13 @@ namespace Proyecto_1_PAvanzada
         }
         private void Limpiar()
         {
+            ViewModel.id_Suplidores = 0;
             txtContacto.Text = "";
             txtCorreo.Text = "";
             txtEmpresa.Text = "";
             txtSitio_Web.Text = "";
             txtid.Text = "0";
             txtTelefono.Text = "";
-            ViewModel.id_Suplidores = 0;
             ViewModel.Nombre_Contacto = "";
             ViewModel.Nombre_Empresa = "";
             ViewModel.Telefono = "";
@@ -214,6 +216,15 @@ namespace Proyecto_1_PAvanzada
         }
         #endregion
 
+        private void cmbEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
     public class SuplidorFormViewModel
     {
@@ -232,22 +243,32 @@ namespace Proyecto_1_PAvanzada
     {
         public SuplidoresFormValidator()
         {
-            RuleFor(a => a.Nombre_Empresa).NotEmpty().Length(1, 49).WithMessage("El nombre de la empresa es requerido");
-            RuleFor(a => a.Nombre_Contacto).NotEmpty().Length(1, 49).WithMessage("El nombre del contacto es requerido");
-            RuleFor(a => a.Nombre_Contacto).MaximumLength(50).WithMessage("El nombre del contacto no puede superar los 50 caracteres (espacion cuentan)");
-            RuleFor(a => a.Nombre_Empresa).MaximumLength(75).WithMessage("El nombre de la empresa no puede superar los 75 caracteres (espacion cuentan)");
-            RuleFor(a => a.Sitio_Web).MaximumLength(300).WithMessage("El nombre de la empresa no puede superar los 300 caracteres (espacion cuentan)");
-            RuleFor(a => a.Telefono).MaximumLength(12).WithMessage("El tele de la empresa no puede superar los 12 caracteres (espacion cuentan)");
-            RuleFor(a => a.Correo).MaximumLength(150).WithMessage("El correo de la empresa no puede superar los 150 caracteres (espacion cuentan)");
-            RuleFor(a => a.S_EstadoId).NotEmpty().WithMessage("El estado es requerido");
-            RuleFor(a => a.Correo).NotEmpty().WithMessage("El correo es requerido");
-            RuleFor(a => a.Telefono).NotEmpty().WithMessage("El telefono es requerido");
-            RuleFor(a => a.Sitio_Web).NotEmpty().WithMessage("El sitio web es requerido");
-            RuleFor(a => a.Telefono).Matches(@"^8[024]9-[0-9]{3}-[0-9]{4}$").WithMessage("Formato Telefonico invalido");
-            RuleFor(a => a.Telefono).Matches((@"^www\.[a-zA-Z0-9\-]+\.[a-zA-Z]{2,4}$")).WithMessage("Formato del sitio web es invalido");
-            RuleFor(a => a.Correo).NotEmpty().EmailAddress().WithMessage("Formato de  correo Invalido");
+            RuleFor(a => a.Nombre_Empresa)
+                      .NotEmpty().WithMessage("El nombre de la empresa es requerido")
+                      .MaximumLength(75).WithMessage("El nombre de la empresa no puede superar los 75 caracteres (espacios cuentan)");
 
+            RuleFor(a => a.Nombre_Contacto)
+                .NotEmpty().WithMessage("El nombre del contacto es requerido")
+                .MaximumLength(50).WithMessage("El nombre del contacto no puede superar los 50 caracteres (espacios cuentan)");
+
+            RuleFor(a => a.Correo)
+                .NotEmpty().WithMessage("El correo es requerido")
+                .MaximumLength(150).WithMessage("El correo no puede superar los 150 caracteres (espacios cuentan)")
+                .EmailAddress().WithMessage("Formato de correo inválido");
+
+            RuleFor(a => a.Telefono)
+                .NotEmpty().WithMessage("El teléfono es requerido")
+                .MaximumLength(12).WithMessage("El teléfono no puede superar los 12 caracteres")
+                .Matches(@"^8[024]9-[0-9]{3}-[0-9]{4}$").WithMessage("Formato telefónico inválido. Ejemplo: 809-123-4567");
+
+            RuleFor(a => a.Sitio_Web)
+                .NotEmpty().WithMessage("El sitio web es requerido")
+                .MaximumLength(300).WithMessage("El sitio web no puede superar los 300 caracteres")
+                .Matches(@"^www\.[a-zA-Z0-9\-]+\.[a-zA-Z]{2,4}$").WithMessage("Formato del sitio web inválido. Ejemplo: www.ejemplo.com");
+
+            RuleFor(a => a.S_EstadoId)
+                .NotEmpty().WithMessage("El estado es requerido");
         }
-       
+
     }
 }

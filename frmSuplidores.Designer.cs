@@ -49,6 +49,7 @@
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
+            textBox1 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dgvSuplidores).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
             panel1.SuspendLayout();
@@ -58,8 +59,7 @@
             // 
             dgvSuplidores.BackgroundColor = Color.DarkGray;
             dgvSuplidores.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvSuplidores.Dock = DockStyle.Fill;
-            dgvSuplidores.Location = new Point(246, 0);
+            dgvSuplidores.Location = new Point(248, -3);
             dgvSuplidores.Name = "dgvSuplidores";
             dgvSuplidores.RowHeadersWidth = 51;
             dgvSuplidores.Size = new Size(1387, 652);
@@ -83,6 +83,7 @@
             // panel1
             // 
             panel1.BackColor = Color.DarkGray;
+            panel1.Controls.Add(textBox1);
             panel1.Controls.Add(cmbEstado);
             panel1.Controls.Add(btnLimpiar);
             panel1.Controls.Add(btnElimiar);
@@ -100,19 +101,21 @@
             panel1.Controls.Add(label3);
             panel1.Controls.Add(label2);
             panel1.Controls.Add(txtid);
-            panel1.Dock = DockStyle.Left;
-            panel1.Location = new Point(0, 0);
+            panel1.Location = new Point(2, 0);
             panel1.Name = "panel1";
             panel1.Size = new Size(246, 652);
             panel1.TabIndex = 5;
+            panel1.Paint += panel1_Paint;
             // 
             // cmbEstado
             // 
+            cmbEstado.DataBindings.Add(new Binding("SelectedValue", bindingSource1, "S_EstadoId", true));
             cmbEstado.FormattingEnabled = true;
             cmbEstado.Location = new Point(12, 413);
             cmbEstado.Name = "cmbEstado";
             cmbEstado.Size = new Size(151, 28);
             cmbEstado.TabIndex = 24;
+            cmbEstado.SelectedIndexChanged += cmbEstado_SelectedIndexChanged;
             // 
             // btnLimpiar
             // 
@@ -271,6 +274,13 @@
             label2.TabIndex = 4;
             label2.Text = "Empresa";
             // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(12, 41);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(150, 27);
+            textBox1.TabIndex = 25;
+            // 
             // frmSuplidores
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -314,5 +324,6 @@
         private BindingSource bindingSource1;
         private Button btnLimpiar;
         private ComboBox cmbEstado;
+        private TextBox textBox1;
     }
 }
